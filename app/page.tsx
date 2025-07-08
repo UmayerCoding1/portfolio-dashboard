@@ -1,11 +1,11 @@
-import { Sidebar } from '@/components/ui/sidebar';
+import Profile from '@/components/Profile';
 import React from 'react';
 
 const page = () => {
   return (
     <div>
       {/* <Sidebar></Sidebar> */}
-      <h1>Home</h1>
+      <Profile />
     </div>
   );
 };

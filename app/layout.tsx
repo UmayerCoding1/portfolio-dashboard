@@ -4,6 +4,8 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Navbar from "@/components/Navbar";
+import Login from "./login/page";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,33 +26,40 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+
+  
+}>
+
+) {
+  const user = false;
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full min-h-screen`}
       >
         <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        value={{
-          light: "light",
-          dark: "dark",
-        }}
-
-        enableSystem
-        disableTransitionOnChange
+          attribute="class"
+          defaultTheme="system"
+          value={{
+            light: "light",
+            dark: "dark",
+          }}
+          enableSystem
+          disableTransitionOnChange
         >
-       
-          
         <SidebarProvider>
-          <AppSidebar />
-          <main>
-            <SidebarTrigger />
-            {children}
-          </main>
-        </SidebarProvider>
-         </ThemeProvider>
+            <div className="flex w-full">
+              <AppSidebar />
+              <main className="flex-1 w-full">
+                <div className="flex items-center justify-between shadow-md border-b border-gray-300 p-3 w-full">
+                  <SidebarTrigger />
+                  <Navbar />
+                </div>
+                <div className="p-4">{user ? children : <Login/>}</div>
+              </main>
+            </div>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
