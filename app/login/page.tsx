@@ -3,8 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LoginFormErrors, LoginFormSchema, type LoginForm } from "@/types/LoginForm";
+import {
+  LoginFormErrors,
+  LoginFormSchema,
+  type LoginForm,
+} from "@/types/LoginForm";
 import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/authSlice";
+
+
 
 const Login = () => {
   const [formData, setFormData] = useState<LoginForm>({
@@ -13,7 +24,8 @@ const Login = () => {
   });
   const [errors, setErrors] = useState<LoginFormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
-
+  const router = useRouter();
+  const dispatch = useDispatch();
   const changeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -25,25 +37,38 @@ const Login = () => {
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = LoginFormSchema.safeParse(formData);
 
-     if (!result.success) {
+    if (!result.success) {
       setErrors(result.error.formErrors.fieldErrors);
-    }else {
+      return;
+    } else {
       setErrors({});
       console.log(formData);
-      
     }
-    
-    
-  }
+   setIsLoading(true);
+    try {
+      const res = await axios.post("/api/login", formData);
+      console.log(res.data);
+      if (res.data.success) {
+        dispatch(setUser(res.data.user));
+        router.push("/");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="flex items-center justify-center max-h-screen overflow-hidden lg:h-[500px]">
-      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-2 w-80 shadow p-2 rounded-lg h-[250px] bg-white dark:bg-zinc-900 text-black dark:text-white">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center justify-center gap-2 w-80 shadow p-2 rounded-lg h-[250px] bg-white dark:bg-zinc-900 text-black dark:text-white"
+      >
         <h1 className="text-2xl font-bold">Login form</h1>
 
         <div className="flex flex-col gap-5 w-full">
@@ -58,7 +83,9 @@ const Login = () => {
               className="bg-white dark:bg-zinc-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white"
             />
 
-            <p className="text-xs text-red-500">{errors.email && errors.email}</p>
+            <p className="text-xs text-red-500">
+              {errors.email && errors.email}
+            </p>
           </div>
 
           <div>
@@ -71,10 +98,12 @@ const Login = () => {
               required
               className="bg-white dark:bg-zinc-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white"
             />
-            <p className="text-xs text-red-500">{errors.password && errors.password[0]} </p>
+            <p className="text-xs text-red-500">
+              {errors.password && errors.password[0]}{" "}
+            </p>
           </div>
 
-          <Button className="cursor-pointer">Login</Button>
+          <Button className="cursor-pointer ">{isLoading ? <Loader2 className="animate-spin"/> :  "Login" }</Button>
         </div>
       </form>
     </div>

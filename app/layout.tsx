@@ -6,6 +6,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Login from "./login/page";
+import ReduxProvider from "@/components/ReduxProvider";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +28,11 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
+}>) {
+  const user = true;
 
-  
-}>
+  // console.log(user);
 
-) {
-  const user = false;
   return (
     <html lang="en">
       <body
@@ -47,15 +48,21 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-        <SidebarProvider>
+          <SidebarProvider>
             <div className="flex w-full">
               <AppSidebar />
+
               <main className="flex-1 w-full">
                 <div className="flex items-center justify-between shadow-md border-b border-gray-300 p-3 w-full">
                   <SidebarTrigger />
                   <Navbar />
                 </div>
-                <div className="p-4">{user ? children : <Login/>}</div>
+
+                 <ReduxProvider>
+
+                 {user ? children : <Login />}
+                 </ReduxProvider>
+               
               </main>
             </div>
           </SidebarProvider>

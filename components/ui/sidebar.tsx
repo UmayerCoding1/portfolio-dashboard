@@ -42,6 +42,8 @@ type SidebarContextProps = {
   toggleSidebar: () => void
 }
 
+
+
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
 function useSidebar() {
@@ -204,6 +206,8 @@ function Sidebar({
       </Sheet>
     )
   }
+
+  
 
   return (
     <div
