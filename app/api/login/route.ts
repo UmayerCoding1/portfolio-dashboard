@@ -38,7 +38,7 @@ export async function GET(request: NextApiRequest) {
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-    return NextResponse.json({ user: user, success: true }, { status: 200 });
+    return NextResponse.json({ user: user, success: true }, { status: 200 }); 
     
   } catch (error) {
     console.log("user", error);

@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Login from "./login/page";
 import ReduxProvider from "@/components/ReduxProvider";
-
+import AuthProvider from "@/components/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,11 +58,9 @@ export default function RootLayout({
                   <Navbar />
                 </div>
 
-                 <ReduxProvider>
-
-                 {user ? children : <Login />}
-                 </ReduxProvider>
-               
+                <ReduxProvider>
+                  <AuthProvider>{user ? children : <Login />}</AuthProvider>
+                </ReduxProvider>
               </main>
             </div>
           </SidebarProvider>
